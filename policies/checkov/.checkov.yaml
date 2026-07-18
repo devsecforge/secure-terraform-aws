@@ -1,0 +1,10 @@
+# Checkov config. The intentionally-insecure teaching example is excluded from the
+# gating scan (it is meant to fail). Everything else must pass with no suppressions.
+directory:
+  - modules
+  - examples/secure-baseline
+skip-path:
+  - examples/insecure
+framework:
+  - terraform
+compact: true

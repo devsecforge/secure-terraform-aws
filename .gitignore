@@ -1,0 +1,30 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+.terraformrc
+terraform.rc
+.terraform.lock.hcl
+
+# Scan outputs
+*.sarif
+reports/
+
+# Secrets / creds
+*.pem
+*.key
+.env
+.env.*
+credentials
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

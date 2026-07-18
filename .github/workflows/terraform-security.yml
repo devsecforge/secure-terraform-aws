@@ -1,0 +1,64 @@
+name: Terraform Security
+
+# fmt + validate + tfsec + checkov on every change. Findings upload as SARIF.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  fmt-validate:
+    name: Format & Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: terraform fmt (check)
+        run: terraform fmt -check -recursive
+      - name: terraform validate (secure-baseline)
+        working-directory: examples/secure-baseline
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+  tfsec:
+    name: tfsec
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-sarif-action@v0.1.4
+        with:
+          sarif_file: tfsec.sarif
+          # The insecure example is expected to fail; scan modules + secure example only.
+          working_directory: .
+      - name: Upload tfsec SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: tfsec.sarif
+          category: tfsec
+
+  checkov:
+    name: Checkov
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          config_file: policies/checkov/.checkov.yaml
+          output_format: cli,sarif
+          output_file_path: console,checkov.sarif
+          soft_fail: false
+      - name: Upload Checkov SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: checkov.sarif
+          category: checkov
