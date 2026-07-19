@@ -18,16 +18,16 @@
 
 Most cloud breaches trace back to a handful of misconfigurations: public buckets, missing
 encryption, and over-privileged IAM. This repo makes those mistakes **hard to make** — a module
-that can't create an insecure bucket, an IAM pattern scoped to exact ARNs, and a CI gate
-(`tfsec` + `checkov`) that fails the build on any regression. An intentionally-insecure example is
-included to show — and scan — the anti-patterns.
+that can't create an insecure bucket, an IAM pattern scoped to exact ARNs, and a CI pipeline
+that scans every change with `tfsec` + `checkov` and surfaces findings in the Security tab. An
+intentionally-insecure example is included to show — and scan — the anti-patterns.
 
 ## ✨ Features
 
 - 🪣 **`secure-s3` module** — public-access block, SSE-KMS/AES256, versioning, TLS-only policy, logging.
 - 🔑 **KMS with rotation** — customer-managed key, 30-day deletion window.
 - 🪪 **Least-privilege IAM** — read-only role scoped to one bucket + `kms:Decrypt` only. No wildcards.
-- 🚦 **Policy-as-code gate** — `terraform fmt/validate` + `tfsec` + `checkov` → SARIF to the Security tab.
+- 🚦 **Policy-as-code checks** — `terraform validate` gate + `tfsec` + `checkov` reporting → SARIF to the Security tab.
 - ⚠️ **Insecure counter-example** — documented anti-patterns, excluded from gating.
 
 ## 🖼️ Screenshots

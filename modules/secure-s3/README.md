@@ -1,6 +1,6 @@
 # Module: `secure-s3`
 
-A hardened S3 bucket, secure by default. Passes `tfsec` and `checkov` with no suppressions.
+A hardened S3 bucket, secure by default. Implements the controls `tfsec` and `checkov` look for.
 
 ## Controls
 | Control | Resource |
